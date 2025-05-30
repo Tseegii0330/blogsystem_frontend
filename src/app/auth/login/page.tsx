@@ -4,10 +4,14 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
+import Cookies from "js-cookie";
+import { useAuth } from "@/context/AuthContext";
 
 export default function LoginPage() {
   const router = useRouter();
+  const { setIsLoggedIn, setUser } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -32,10 +36,11 @@ export default function LoginPage() {
       const token = result.data.token;
       const user = result.data.user;
 
-      document.cookie = `token=${token}; path=/; max-age=3600`;
+      Cookies.set("token", token);
 
       localStorage.setItem("user", JSON.stringify(user));
-
+      setIsLoggedIn(true);
+      setUser(user);
       toast.success("Амжилттай нэвтэрлээ!");
       router.push("/");
     } catch (err: unknown) {
@@ -50,34 +55,40 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex justify-center items-center flex-col mt-12 w-full gap-4">
-      <h1 className="text-4xl font-bold text-yellow-400 ">Нэвтрэх</h1>
-      <form
-        onSubmit={handleLogin}
-        className="max-w-sm mx-auto space-y-4 w-full"
-      >
-        <Input
-          type="email"
-          placeholder="Имэйл"
-          value={email}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setEmail(e.target.value)
-          }
-          required
-        />
-        <Input
-          type="password"
-          placeholder="Нууц үг"
-          value={password}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setPassword(e.target.value)
-          }
-          required
-        />
-        <Button type="submit" className="w-full" disabled={loading}>
-          {loading ? "Нэвтэрч байна..." : "Нэвтрэх"}
-        </Button>
-      </form>
+    <div className="flex justify-center items-center min-h-screen bg-gray-50">
+      <Card className="w-full max-w-sm">
+        <CardHeader>
+          <CardTitle>Нэвтрэх</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form
+            onSubmit={handleLogin}
+            className="max-w-sm mx-auto space-y-4 w-full"
+          >
+            <Input
+              type="email"
+              placeholder="Имэйл"
+              value={email}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setEmail(e.target.value)
+              }
+              required
+            />
+            <Input
+              type="password"
+              placeholder="Нууц үг"
+              value={password}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setPassword(e.target.value)
+              }
+              required
+            />
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? "Нэвтэрч байна..." : "Нэвтрэх"}
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
 }

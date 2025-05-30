@@ -1,4 +1,6 @@
 import ArticleCard from "@/components/ArticleCard";
+import { notFound } from "next/navigation";
+
 // http://localhost:3001/api/articles?tags=test&author_id=1
 async function getArticles() {
   const res = await fetch(`http://localhost:3001/api/articles`, {
@@ -11,6 +13,8 @@ async function getArticles() {
 }
 async function Home() {
   const articles = await getArticles();
+
+  if (!articles) return notFound;
 
   return (
     <div className="grid grid-rows-[20px_1fr_20px] justify-items-center p-8 pb-20 gap-16 font-[family-name:var(--font-geist-sans)]">

@@ -1,19 +1,11 @@
-// components/ArticleCard.tsx
+"use client";
 
 import { FC } from "react";
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
-
-type articleType = {
-  id: number;
-  title: string;
-  content: string;
-  tags: string[];
-  author: string;
-  created_at: string;
-};
+import { articleType } from "@/types/type";
 
 interface ArticleCardProps {
   articles: articleType[];
