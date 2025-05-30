@@ -30,7 +30,10 @@ export default function LoginPage() {
       const result = await res.json();
 
       if (!result.success) {
-        throw new Error("Нэвтрэх амжилтгүй.");
+        if (result.error?.includes("баталгаажаагүй")) {
+          toast.warning("Имэйл баталгаажаагүй байна. Та имэйлээ шалгана уу.");
+          return;
+        }
       }
 
       const token = result.data.token;
@@ -55,40 +58,42 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-50">
-      <Card className="w-full max-w-sm">
-        <CardHeader>
-          <CardTitle>Нэвтрэх</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <form
-            onSubmit={handleLogin}
-            className="max-w-sm mx-auto space-y-4 w-full"
-          >
-            <Input
-              type="email"
-              placeholder="Имэйл"
-              value={email}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setEmail(e.target.value)
-              }
-              required
-            />
-            <Input
-              type="password"
-              placeholder="Нууц үг"
-              value={password}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setPassword(e.target.value)
-              }
-              required
-            />
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? "Нэвтэрч байна..." : "Нэвтрэх"}
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
-    </div>
+    <>
+      <div className="flex justify-center items-center min-h-screen bg-gray-50">
+        <Card className="w-full max-w-sm">
+          <CardHeader>
+            <CardTitle>Нэвтрэх</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form
+              onSubmit={handleLogin}
+              className="max-w-sm mx-auto space-y-4 w-full"
+            >
+              <Input
+                type="email"
+                placeholder="Имэйл"
+                value={email}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setEmail(e.target.value)
+                }
+                required
+              />
+              <Input
+                type="password"
+                placeholder="Нууц үг"
+                value={password}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setPassword(e.target.value)
+                }
+                required
+              />
+              <Button type="submit" className="w-full" disabled={loading}>
+                {loading ? "Нэвтэрч байна..." : "Нэвтрэх"}
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
+    </>
   );
 }
