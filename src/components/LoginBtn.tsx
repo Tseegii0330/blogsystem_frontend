@@ -9,12 +9,13 @@ import {
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
-import { User } from "lucide-react";
+import { User, Plus, LogOut, Book } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 
 export default function LoginBtn() {
   const { isLoggedIn, logout, user } = useAuth();
   console.log(isLoggedIn);
+  console.log(user);
 
   return (
     <div>
@@ -25,14 +26,31 @@ export default function LoginBtn() {
           </PopoverTrigger>
           <PopoverContent>
             <div className="flex flex-col gap-2 space-x-3">
-              <Link href="/account" className="bg-gray-300 p-2 rounded p-0 m-0">
-                {user?.name}
-              </Link>
+              <p>{user?.name}</p>
+              {user?.role == "admin" || user?.role == "editor" ? (
+                <div className="flex flex-col gap-2 space-x-3 w-full">
+                  <Button className="cursor-pointer bg-gray-400 w-full ">
+                    <Book />
+                    Миний нийтлэлүүд
+                  </Button>
+                  <Button
+                    className="cursor-pointer bg-gray-400 w-full "
+                    size="sm"
+                    // onClick={logout}
+                  >
+                    <Plus />
+                    Нийтлэл нэмэх
+                  </Button>
+                </div>
+              ) : (
+                <div></div>
+              )}
               <Button
                 className="cursor-pointer bg-red-700"
                 size="sm"
                 onClick={logout}
               >
+                <LogOut />
                 Гарах
               </Button>
             </div>

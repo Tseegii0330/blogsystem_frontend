@@ -1,7 +1,8 @@
 import ArticleCard from "@/components/ArticleCard";
 import { notFound } from "next/navigation";
+import SearchBar from "@/components/Search";
+import Pagination from "@/components/Paginations";
 
-// http://localhost:3001/api/articles?tags=test&author_id=1
 async function getArticles() {
   const res = await fetch(`http://localhost:3001/api/articles`, {
     method: "GET",
@@ -13,14 +14,22 @@ async function getArticles() {
 }
 async function Home() {
   const articles = await getArticles();
-
+  const { currentPage, totalPages, nextPage, hasNextPage, hasPrevPage, data } =
+    articles;
   if (!articles) return notFound;
 
   return (
     <div className="grid grid-rows-[20px_1fr_20px] justify-items-center p-8 pb-20 gap-16 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-[32px] items-center sm:items-start">
-        <h1 className="text-5xl font-bold text-yellow-400">Бүх нийтлэлүүд</h1>
-        <ArticleCard articles={articles.data} />
+        <SearchBar />
+        <ArticleCard articles={data} />
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          nextPage={nextPage}
+          hasNextPage={hasNextPage}
+          hasPrevPage={hasPrevPage}
+        />
       </main>
     </div>
   );
