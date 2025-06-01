@@ -15,6 +15,7 @@ function VerifyEmailPage() {
   const [verified, setVerified] = useState(false);
   const [error, setError] = useState("");
   const { setUser, setIsLoggedIn } = useAuth();
+
   const token = searchParams.get("token");
 
   useEffect(() => {
@@ -61,7 +62,7 @@ function VerifyEmailPage() {
     };
 
     verifyEmail();
-  }, [token]);
+  }, [token, router, setUser, setIsLoggedIn]);
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-50 px-4">
