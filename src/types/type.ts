@@ -10,6 +10,7 @@ export interface articleType {
   title: string;
   content: string;
   tags: string[];
-  author: string;
+  author_id: number;
+  is_published: boolean;
   created_at: string;
 }

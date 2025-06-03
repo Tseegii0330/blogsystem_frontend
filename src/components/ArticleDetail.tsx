@@ -1,13 +1,20 @@
+"use client";
+
 import React, { FC } from "react";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 import { articleType } from "@/types/type";
+import { useAuth } from "@/context/AuthContext";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 interface ArticleDetailProps {
   article: articleType;
 }
 
 const ArticleDetail: FC<ArticleDetailProps> = ({ article }) => {
+  const { user } = useAuth();
+
   return (
     <div>
       <div className="p-5 space-y-3">
@@ -28,6 +35,18 @@ const ArticleDetail: FC<ArticleDetailProps> = ({ article }) => {
 
         <p className="text-sm text-gray-700 line-clamp-3">{article.content}</p>
       </div>
+      {user?.role == "admin" || user?.role == "editor" ? (
+        <div className="flex justify-between items-center">
+          <Button>
+            <Link href={`/articles/edit/${article.id}`}>Засах</Link>
+          </Button>
+          <Button className="bg-red-500">
+            <span>Устгах</span>
+          </Button>
+        </div>
+      ) : (
+        <span></span>
+      )}
     </div>
   );
 };

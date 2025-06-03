@@ -3,18 +3,33 @@ import { notFound } from "next/navigation";
 import SearchBar from "@/components/Search";
 import Pagination from "@/components/Paginations";
 
-async function getArticles() {
-  const res = await fetch(`http://localhost:3001/api/articles`, {
+interface Props {
+  searchParams: {
+    author?: string;
+    tags?: string;
+    page?: string;
+  };
+}
+async function getArticles({ tags, author, page }: Props["searchParams"]) {
+  const query = new URLSearchParams({
+    ...(tags ? { tags } : {}),
+    ...(author ? { author } : {}),
+    ...(page ? { page } : {}),
+  }).toString();
+
+  const res = await fetch(`http://localhost:3001/api/articles?${query}`, {
     method: "GET",
+    cache: "no-store",
   });
   if (!res.ok) {
     throw new Error("Failer to fetch articles");
   }
   return res.json();
 }
-async function Home() {
-  const articles = await getArticles();
-  const { currentPage, totalPages, nextPage, hasNextPage, hasPrevPage, data } =
+
+async function Home({ searchParams }: Props) {
+  const articles = await getArticles(searchParams);
+  const { totalPages, nextPage, hasNextPage, hasPrevPage, page, data } =
     articles;
   if (!articles) return notFound;
 
@@ -24,7 +39,7 @@ async function Home() {
         <SearchBar />
         <ArticleCard articles={data} />
         <Pagination
-          currentPage={currentPage}
+          currentPage={page}
           totalPages={totalPages}
           nextPage={nextPage}
           hasNextPage={hasNextPage}

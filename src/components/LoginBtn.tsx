@@ -31,7 +31,11 @@ export default function LoginBtn() {
                 <div className="flex flex-col gap-2 space-x-3 w-full">
                   <Button className="cursor-pointer bg-gray-400 w-full ">
                     <Book />
-                    Миний нийтлэлүүд
+                    Dashbaord
+                  </Button>
+                  <Button className="cursor-pointer bg-gray-400 w-full ">
+                    <Book />
+                    нийтлэлүүд
                   </Button>
                   <Button
                     className="cursor-pointer bg-gray-400 w-full "
@@ -43,7 +47,20 @@ export default function LoginBtn() {
                   </Button>
                 </div>
               ) : (
-                <div></div>
+                <div className="flex flex-col gap-2 space-x-3 w-full">
+                  <Button className="cursor-pointer bg-gray-400 w-full ">
+                    <Book />
+                    Миний нийтлэлүүд
+                  </Button>
+                  <Button
+                    className="cursor-pointer bg-gray-400 w-full "
+                    size="sm"
+                    // onClick={logout}
+                  >
+                    <Plus />
+                    Нийтлэл нэмэх
+                  </Button>
+                </div>
               )}
               <Button
                 className="cursor-pointer bg-red-700"

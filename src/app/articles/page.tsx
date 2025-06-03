@@ -9,7 +9,6 @@ interface Props {
     page?: string;
   };
 }
-// http://localhost:3001/api/articles?tags=test&author_id=1
 async function getArticles({ tags, author, page }: Props["searchParams"]) {
   const query = new URLSearchParams({
     ...(tags ? { tags } : {}),
@@ -28,8 +27,6 @@ async function getArticles({ tags, author, page }: Props["searchParams"]) {
 }
 
 async function Articles({ searchParams }: Props) {
-  console.log(searchParams);
-
   const articles = await getArticles(searchParams);
 
   if (!articles) return notFound;
