@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Form,
   FormControl,
@@ -125,10 +126,11 @@ const EditForm: FunctionComponent<ArticleFormProps> = ({ article }) => {
               <FormItem>
                 <FormLabel>Дэлгэрэнгүй</FormLabel>
                 <FormControl>
-                  <Input
-                    type="string"
+                  <Textarea
+                    placeholder="Type your content here."
+                    className="resize-none"
                     {...field}
-                    onChange={(e) => field.onChange(parseInt(e.target.value))}
+                    onChange={(e) => field.onChange(e.target.value)}
                   />
                 </FormControl>
                 <FormMessage />
