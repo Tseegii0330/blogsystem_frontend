@@ -1,12 +1,14 @@
 "use client";
 
-import { useState, useEffect, FunctionComponent } from "react";
+import { FunctionComponent } from "react";
+import Cookies from "js-cookie";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { toast } from "sonner";
 import {
   Form,
   FormControl,
@@ -17,7 +19,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { articleType } from "@/types/type";
-import { useAuth } from "@/context/AuthContext";
 
 const formSchema = z.object({
   title: z.string().min(2, {
@@ -35,9 +36,8 @@ interface ArticleFormProps {
   article?: articleType | null;
 }
 const EditForm: FunctionComponent<ArticleFormProps> = ({ article }) => {
+  const token = Cookies.get("token");
   const router = useRouter();
-
-  const [infoMessage, setInfoMessage] = useState<string | null>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -50,18 +50,6 @@ const EditForm: FunctionComponent<ArticleFormProps> = ({ article }) => {
     },
   });
 
-  useEffect(() => {
-    if (!infoMessage) return;
-
-    const timeout = setTimeout(() => {
-      setInfoMessage(null);
-    }, 2000);
-
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, [infoMessage]);
-
   function onSubmit(values: z.infer<typeof formSchema>) {
     const finalValues = {
       ...values,
@@ -69,34 +57,42 @@ const EditForm: FunctionComponent<ArticleFormProps> = ({ article }) => {
 
     if (article) {
       // Update
-      fetch(`/api/ticket/${article.id}`, {
+      fetch(`http://localhost:3001/api/articles/${article.id}`, {
         method: "PUT",
         body: JSON.stringify(finalValues),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${token}`,
+        },
       })
         .then(() => {
-          setInfoMessage("Амжилттай хадгаллаа");
+          toast.success("Амжилттай хадгаллаа");
         })
         .catch((error) => {
-          setInfoMessage(error.message);
+          toast.warning(error.message);
         });
     } else {
       // Create
-      fetch("/api/ticket", {
+      fetch("http://localhost:3001/api/articles", {
         method: "POST",
         body: JSON.stringify(finalValues),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${token}`,
+        },
       })
         .then((res) => res.json())
-        .then(({ ticket, error }) => {
-          setInfoMessage("Амжилттай хадгаллаа");
+        .then(({ article, error }) => {
+          toast.success("Амжилттай хадгаллаа");
 
           if (error) {
             throw new Error(error.message);
           }
 
-          router.push(`/ticket/edit/${ticket?.id}`);
+          router.push(`/articles/edit/${article?.id}`);
         })
         .catch((error) => {
-          setInfoMessage(error.message);
+          toast.success(error.message);
         });
     }
   }
@@ -106,9 +102,6 @@ const EditForm: FunctionComponent<ArticleFormProps> = ({ article }) => {
       <h1 className="text-3xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl sm:leading-10 md:text-3xl md:leading-14 mt-4">
         {article ? "Нийтлэл засах" : "Нийтлэл нэмэх"}
       </h1>
-      {infoMessage && (
-        <div className="py-4 text-md text-sky-400">{infoMessage}</div>
-      )}
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -117,7 +110,7 @@ const EditForm: FunctionComponent<ArticleFormProps> = ({ article }) => {
             name="title"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Title</FormLabel>
+                <FormLabel>Нэр</FormLabel>
                 <FormControl>
                   <Input {...field} />
                 </FormControl>
@@ -130,7 +123,7 @@ const EditForm: FunctionComponent<ArticleFormProps> = ({ article }) => {
             name="content"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Үнэ</FormLabel>
+                <FormLabel>Дэлгэрэнгүй</FormLabel>
                 <FormControl>
                   <Input
                     type="string"
