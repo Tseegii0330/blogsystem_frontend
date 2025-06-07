@@ -29,7 +29,7 @@ const formSchema = z.object({
     message: "Мэдээлэл оруулна уу",
   }),
   tags: z.array(z.string()),
-  author_id: z.number(),
+  user_id: z.number(),
   is_published: z.boolean(),
 });
 
@@ -46,7 +46,7 @@ const EditForm: FunctionComponent<ArticleFormProps> = ({ article }) => {
       title: article?.title || "",
       content: article?.content || "",
       tags: article?.tags || [],
-      author_id: article?.author_id,
+      user_id: article?.user_id,
       is_published: article?.is_published || false,
     },
   });

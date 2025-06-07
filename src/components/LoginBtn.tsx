@@ -8,11 +8,13 @@ import {
 } from "@/components/ui/popover";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 import { User, Plus, LogOut, Book } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 
 export default function LoginBtn() {
+  const router = useRouter();
   const { isLoggedIn, logout, user } = useAuth();
   console.log(isLoggedIn);
   console.log(user);
@@ -27,20 +29,26 @@ export default function LoginBtn() {
           <PopoverContent>
             <div className="flex flex-col gap-2 space-x-3">
               <p>{user?.name}</p>
-              {user?.role == "admin" || user?.role == "editor" ? (
+              {user?.role == "admin" ? (
                 <div className="flex flex-col gap-2 space-x-3 w-full">
-                  <Button className="cursor-pointer bg-gray-400 w-full ">
-                    <Book />
-                    Dashbaord
+                  <Button
+                    className="cursor-pointer bg-gray-400 w-full"
+                    onClick={() => router.push("/users")}
+                  >
+                    <User />
+                    Хэрэглэгчид
                   </Button>
-                  <Button className="cursor-pointer bg-gray-400 w-full ">
+                  <Button
+                    className="cursor-pointer bg-gray-400 w-full"
+                    onClick={() => router.push("/articles")}
+                  >
                     <Book />
                     нийтлэлүүд
                   </Button>
                   <Button
                     className="cursor-pointer bg-gray-400 w-full "
                     size="sm"
-                    // onClick={logout}
+                    onClick={() => router.push("/articles/create")}
                   >
                     <Plus />
                     Нийтлэл нэмэх
@@ -55,7 +63,6 @@ export default function LoginBtn() {
                   <Button
                     className="cursor-pointer bg-gray-400 w-full "
                     size="sm"
-                    // onClick={logout}
                   >
                     <Plus />
                     Нийтлэл нэмэх

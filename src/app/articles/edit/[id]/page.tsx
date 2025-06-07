@@ -8,7 +8,10 @@ interface EditProps {
 }
 
 const getArticleById = async (id: string) => {
-  const res = await fetch(`http://localhost:3001/api/articles/${id}`);
+  const res = await fetch(`http://localhost:3001/api/articles/${id}`, {
+    method: "GET",
+    cache: "no-store",
+  });
   const data = await res.json();
   if (!data.success) {
     throw new Error("Failed to fetch articl");
