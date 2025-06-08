@@ -4,6 +4,9 @@ export interface UserType {
   email: string;
   password: string;
   role: string;
+  is_verified: string;
+  created_at: Date;
+  updated_at: Date;
 }
 export interface articleType {
   id: number;

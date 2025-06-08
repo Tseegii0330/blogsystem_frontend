@@ -23,8 +23,6 @@ async function editPage({ params }: EditProps) {
   const id = params.id;
   const article = await getArticleById(id);
 
-  console.log(article);
-
   return (
     <div className="mx-auto max-w-3xl px-4 sm:px-6 xl:max-w-5xl xl:px-0">
       <EditForm article={article} />

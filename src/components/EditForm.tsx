@@ -66,7 +66,11 @@ const EditForm: FunctionComponent<ArticleFormProps> = ({ article }) => {
           Authorization: `${token}`,
         },
       })
-        .then(() => {
+        .then(async (res) => {
+          if (!res.ok) {
+            const err = await res.json();
+            throw new Error(err.message || "Алдаа гарлаа");
+          }
           toast.success("Амжилттай хадгаллаа");
         })
         .catch((error) => {
