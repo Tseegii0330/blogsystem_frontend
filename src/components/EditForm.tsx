@@ -1,6 +1,6 @@
 "use client";
 
-import { FunctionComponent } from "react";
+import { FunctionComponent, useState } from "react";
 import Cookies from "js-cookie";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -39,6 +39,24 @@ interface ArticleFormProps {
 const EditForm: FunctionComponent<ArticleFormProps> = ({ article }) => {
   const token = Cookies.get("token");
   const router = useRouter();
+  const [tagInput, setTagInput] = useState("");
+  const [tags, setTags] = useState<string[]>(article?.tags || []);
+
+  const handleAddTag = () => {
+    const trimmed = tagInput.trim();
+
+    if (trimmed && !tags.includes(trimmed)) {
+      setTags([...tags, trimmed]);
+      setTagInput("");
+    }
+  };
+
+  const handleDeleteTag = (index: number) => {
+    const newTags = [...tags];
+    newTags.splice(index, 1);
+    setTags(newTags);
+  };
+  console.log("tags: ", tags);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -54,6 +72,7 @@ const EditForm: FunctionComponent<ArticleFormProps> = ({ article }) => {
   function onSubmit(values: z.infer<typeof formSchema>) {
     const finalValues = {
       ...values,
+      tags: tags,
     };
 
     if (article) {
@@ -123,6 +142,36 @@ const EditForm: FunctionComponent<ArticleFormProps> = ({ article }) => {
               </FormItem>
             )}
           />
+          <div className="space-y-4">
+            <div className="flex gap-2">
+              <Input
+                value={tagInput}
+                onChange={(e) => setTagInput(e.target.value)}
+                placeholder="Таг бичнэ үү"
+              />
+              <Button type="button" onClick={handleAddTag}>
+                Нэмэх
+              </Button>
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+              {tags.map((tag, index) => (
+                <div
+                  key={index}
+                  className="flex items-center bg-gray-200 px-3 py-1 rounded-full text-sm"
+                >
+                  {tag}
+                  <button
+                    className="ml-2 text-red-500 font-bold"
+                    onClick={() => handleDeleteTag(index)}
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+
           <FormField
             control={form.control}
             name="content"
